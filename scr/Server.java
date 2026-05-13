@@ -12,7 +12,6 @@ public class Server {
     PrintWriter out;
 
 
-
    public Server(){
         try {
             server = new ServerSocket(7777);
@@ -31,7 +30,9 @@ public class Server {
         }
     }
 
+//
 
+    //
 
 
     public void startReading(){
