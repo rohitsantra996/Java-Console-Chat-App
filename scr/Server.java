@@ -29,6 +29,8 @@ public class Server {
 
         }
     }
+    //
+     //
 
 //
 
@@ -38,24 +40,30 @@ public class Server {
     public void startReading(){
     Runnable r1 =()->{
         System.out.println("Read started...");
+        try {
+            while (true) {
 
-        while(true){
 
-           try {
 
-               /* data accept kar raha h */
-               String msg  = br.readLine();
+                /* data accept kar raha h */
+                String msg = br.readLine();
 
-               if (msg.equals("exit")){
-                   System.out.println("Client Terminated the Chat");
-                   socket.close();// connection off ho jayega
-                   break;
-               }
-               System.out.println("Client : "+ msg);
-           }catch (Exception e){
-             e.printStackTrace();
-           }
+                if (msg.equals("exit")) {
+                    System.out.println("Client Terminated the Chat");
+                    socket.close();// connection off ho jayega
+                    break;
+                }
+                System.out.println("Client : " + msg);
+
+            }
+            System.out.println("Connection Closed.....in Reader");
+
+        }catch (Exception e){
+            System.out.println("Connection Closed.....in Reader");
         }
+
+
+
     };
         new Thread(r1).start();
 
@@ -67,8 +75,9 @@ public class Server {
         Runnable r2 =()->{
             System.out.println("Write started...");
 
-            while (true){
-                try {
+            try {
+                while (!socket.isClosed()) {
+
 
                     // Reading message from keyboard
                     BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
@@ -80,11 +89,15 @@ public class Server {
                     // flush() forces data to send immediately
                     out.flush();
 
-                }catch (Exception e){
-                    e.printStackTrace();
+                    if (content.equals("exit")){
+                        socket.close();
+                        break;
+                    }
                 }
+                System.out.println("Connection is closed in Writer");
 
-            }
+            }catch (Exception e){
+                System.out.println("Connection is closed in Writer");        }
         };
         new Thread(r2).start();
     }
